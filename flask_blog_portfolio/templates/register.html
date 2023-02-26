@@ -2,16 +2,10 @@
 
 {% block body %}
 <section class="registration">
-    <h1>Hi</h1>
     <div class="container-md">
+
         <h4 class="mb-3 text-center">Registration</h4>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="notification is-danger">
-            {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
-        </div>
-        {% endif %}
-        {% endwith %}
+
         <form method="POST" action='' class="needs-validation" novalidate>
             {{ form.hidden_tag() }}
             <div class="row">
@@ -88,5 +82,4 @@
     </div>
 
 </section>
-
 {% endblock %}
