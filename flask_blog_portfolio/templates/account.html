@@ -39,7 +39,7 @@
 {% endblock head %}
 
 
-{% block content %}
+{% block body %}
     <div class="content-section">
       <div class="media">
         <img class="rounded-circle account-img" src="{{ image_file }}">
@@ -95,7 +95,17 @@
           </div>
       </form>      
     </div>   
+    <div>
+        <div class="card" style="margin-bottom: 20px;">
+      <div class="card-body">
+        <h4 class="card-title"><a href="{{ url_for('users.user_posts', username=post.author.username) }}" id="author" style="margin: 0 auto;">{{ post.author.username }}</a></h4>
+
+        <small>Опубликовано {{ post.date_posted.strftime('%A, %d %B %Y %I:%M %p') }}</small>
+        <br>
+        <br>
+        <p class="card-text">{{ post.content }}</p>
+      </div>
+    </div>
 
 
-
-{% endblock content %}
+{% endblock %}
