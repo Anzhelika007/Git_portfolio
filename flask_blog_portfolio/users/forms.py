@@ -9,7 +9,7 @@ from flask_blog_portfolio.models import User
 class RegistrationForm(FlaskForm):
     username = StringField('Имя пользователя:', validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('Email:', validators=[DataRequired(), Email()])
-    password = PasswordField('Пароль:', validators=[DataRequired()])
+    password = PasswordField('Пароль:', validators=[DataRequired(), Length(min=4, max=20)])
     confirm_password = PasswordField('Подтвердить пароль', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Зарегистрироваться')
 
