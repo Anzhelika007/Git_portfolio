@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
+
 {% block body %}
 <section class="registration">
+    <h1>Hi</h1>
     <div class="container-md">
         <h4 class="mb-3 text-center">Registration</h4>
         {% with messages = get_flashed_messages() %}
@@ -15,7 +17,7 @@
             <div class="row">
                 <div class="col form_input">
                     <div class="col-12">
-                        {{ form.username.label(class="form-label") }}
+                        {{ form.username.label(class="form-control-label") }}
                         <div class="input-group has-validation">
                             {% if form.username.errors %}
                             {{ form.username(class="form-control") }}
@@ -25,14 +27,15 @@
                                 <span>{{ error }}</span>
                                 {% endfor %}
                             </div>
+
+                            {% else %}
+                            {{ form.username(class="form-control") }}
+                            {% endif %}
                         </div>
-                        {% else %}
-                        {{ form.username(class="form-control") }}
-                        {% endif %}
                     </div>
 
                     <div class="col-12">
-                        {{ form.email.label(class="form-label") }}
+                        {{ form.email.label(class="form-control-label") }}
                         {% if form.email.errors %}
                         {{ form.email(class="form-control is-invalid") }}
                         <div class="invalid-feedback">
@@ -46,7 +49,7 @@
                     </div>
 
                     <div class="col-12">
-                        {{ form.password.label(class="form-label") }}
+                        {{ form.password.label(class="form-control-label") }}
                         {% if form.password.errors %}
                         {{ form.password(class="form-control") }}
                         <div class="invalid-feedback">
@@ -61,7 +64,7 @@
 
 
                     <div class="col-12">
-                        {{ form.confirm_password.label(class="form-label") }}
+                        {{ form.confirm_password.label(class="form-control-label") }}
                         {% if form.confirm_password.errors %}
                         {{ form.confirm_password(class="form-control") }}
                         <div class="invalid-feedback">
@@ -75,11 +78,8 @@
 
                     </div>
                 </div>
-
                 <hr class="my-4">
-
             </div>
-
             <div class="row">
                 {{ form.submit(class="w-100 btn btn-primary btn-lg form_registration_btn") }}
             </div>
