@@ -29,7 +29,9 @@
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
                  aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Blog</h5>
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel"> <svg class="bi me-2" width="150" height="30">
+                    <use xlink:href="{{ url_for('static', filename='icon/sprite.svg')}}#LOGO 1"></use>
+                </svg></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
@@ -70,6 +72,7 @@
                             <ul class="dropdown-menu">
 
                                 <li><a class="dropdown-item" href="{{ url_for('users.account') }}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('posts.new_post') }}">Add post</a></li>
                                 <li>
                                     <a class="dropdown-item" href="#">
                                         Favorites posts
@@ -107,6 +110,8 @@
         </div>
     </nav>
 </div>
+{% block search %}
+{% endblock %}
 {% block body %}
 {% endblock %}
 

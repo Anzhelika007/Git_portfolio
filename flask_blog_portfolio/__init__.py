@@ -3,10 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_blog_portfolio.config import Config
 from flask_bcrypt import Bcrypt
+from flask_mail import Mail
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
+mail = Mail()
 
 
 def create_app():
@@ -15,6 +17,7 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
+    mail.init_app(app)
 
     from flask_blog_portfolio.main.routes import main
     from flask_blog_portfolio.users.routes import users

@@ -1,111 +1,123 @@
 {% extends "layout.html" %}
 
-{% block head %}
-  <style>
-    .container{
-      margin-bottom: 0.8rem;
-    }
-
-    .content-section{
-      box-shadow: 10px 20px 8px darkslategray;
-    }
-
-    .card{
-      border-radius: 25px;
-      /* border-top-right-radius: 25px;
-      border-bottom-left-radius: 25px; */
-      background-color:  white; 
-      box-shadow: 10px 15px 10px #4a4e69;
-      width: 92%;
-    }
-
-    a{
-      color: #003049;
-    }
-
-    small{
-      color: lightslategray;
-    }
-
-    p{
-      color: rgb(43, 37, 37);
-    }
-    
-    /* i{
-      padding: 0px 7px;
-      cursor: pointer;
-    } */
-  </style>
-{% endblock head %}
-
-
 {% block body %}
-    <div class="content-section">
-      <div class="media">
-        <img class="rounded-circle account-img" src="{{ image_file }}">
-        <div class="media-body">
-          <h2 class="account-heading">{{ current_user.username }}</h2>
-          <p class="text-secondary">{{ current_user.email }}</p>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <div class="media">
+                    <img class="rounded-circle img-thumbnail account-img" src="{{ image_file }}">
+                    <div class="media-body">
+                        <h2 class="account-heading">{{ current_user.username }}</h2>
+                        <p class="text-secondary">{{ current_user.email }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Аккаунт пользователя</legend>
+                        <div class="form-group">
+                            {{ form.username.label(class="form-control-label") }}
+
+                            {% if form.username.errors %}
+                            {{ form.username(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ form.username(class="form-control form-control-lg") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email.label(class="form-control-label") }}
+                            {% if form.email.errors %}
+                            {{ form.email(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ form.email(class="form-control form-control-lg") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.picture.label() }}
+                            {{ form.picture(class="form-control-file") }}
+                            {% if form.picture.errors %}
+                            {% for error in form.picture.errors %}
+                            <span class="text-danger">{{ error }}</span><br>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-outline-info") }}
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
+        <div>
+            <div class="list-group w-auto">
 
-      <form method="POST" action="" enctype="multipart/form-data">
-          {{ form.hidden_tag() }}
-          <fieldset class="form-group">
-              <legend class="border-bottom mb-4">Аккаунт пользователя</legend>
-              <div class="form-group">
-                  {{ form.username.label(class="form-control-label") }}
-
-                  {% if form.username.errors %}
-                      {{ form.username(class="form-control form-control-lg is-invalid") }}
-                      <div class="invalid-feedback">
-                          {% for error in form.username.errors %}
-                              <span>{{ error }}</span>
-                          {% endfor %}
-                      </div>
-                  {% else %}
-                      {{ form.username(class="form-control form-control-lg") }}
-                  {% endif %}
-              </div>
-              <div class="form-group">
-                  {{ form.email.label(class="form-control-label") }}
-                  {% if form.email.errors %}
-                      {{ form.email(class="form-control form-control-lg is-invalid") }}
-                      <div class="invalid-feedback">
-                          {% for error in form.email.errors %}
-                              <span>{{ error }}</span>
-                          {% endfor %}
-                      </div>
-                  {% else %}
-                      {{ form.email(class="form-control form-control-lg") }}
-                  {% endif %}
-              </div>
-              <div class="form-group">
-                  {{ form.picture.label() }}
-                  {{ form.picture(class="form-control-file") }}
-                  {% if form.picture.errors %}
-                      {% for error in form.picture.errors %}
-                          <span class="text-danger">{{ error }}</span></br>
-                      {% endfor %}
-                  {% endif %}
-              </div>
-          </fieldset>
-          <div class="form-group">
-              {{ form.submit(class="btn btn-outline-info") }}
-          </div>
-      </form>      
-    </div>   
-    <div>
-        <div class="card" style="margin-bottom: 20px;">
-      <div class="card-body">
-        <h4 class="card-title"><a href="{{ url_for('users.user_posts', username=post.author.username) }}" id="author" style="margin: 0 auto;">{{ post.author.username }}</a></h4>
-
-        <small>Опубликовано {{ post.date_posted.strftime('%A, %d %B %Y %I:%M %p') }}</small>
-        <br>
-        <br>
-        <p class="card-text">{{ post.content }}</p>
-      </div>
+                {% for post in posts.items %}
+                <div>
+                    <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                        <a href="{{ url_for('posts.post', post_id=post.id) }}" class="" aria-current="true">
+                            <img src="https://github.com/twbs.png" alt="twbs" width="32" height="32"
+                                 class="rounded-circle flex-shrink-0">
+                        </a>
+                        <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                                <a href="{{ url_for('posts.post', post_id=post.id) }}">
+                                    <h6 class="mb-0">{{ post.title }}</h6>
+                                </a>
+                                <p class="mb-0 opacity-75">{{ post.content |truncate(80, False, '...', 0)}}</p>
+                            </div>
+                            <div>
+                                <small class="opacity-50 text-nowrap">{{ post.date_posted.strftime('%d %B %Y %I:%M %p')
+                                    }}</small>
+                                <div>
+                                    <div>
+                                        <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                                           href="{{url_for('posts.update_post', post_id=post.id) }}">Обновить</a>
+                                        <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Удалить
+                </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Удалить пост?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                ...
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+                                    <input class="btn btn-danger" type="submit" value="Удалить">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-
-
+</section>
 {% endblock %}
