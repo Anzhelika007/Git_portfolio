@@ -1,6 +1,6 @@
 import os
 from secrets import token_hex
-from pil import Image
+from PIL import Image
 from flask import url_for, current_app
 from flask_mail import Message
 from flask_blog_portfolio import mail
