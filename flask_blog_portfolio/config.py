@@ -1,5 +1,6 @@
 class Config:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = '874566th9rh454bgf45455bgdb454df64668989'
 
     MAIL_SERVER = 'smtp.yandex.ru'

@@ -1,8 +1,9 @@
 from flask import (render_template, url_for, flash, redirect, request, abort, Blueprint)
 from flask_login import current_user, login_required
 from flask_blog_portfolio import db
-from flask_blog_portfolio.models import Post, Comment
-from flask_blog_portfolio.posts.forms import PostForm, CommentForm
+from flask_blog_portfolio.models import Post, Comment, Like
+from flask_blog_portfolio.posts.forms import PostForm, CommentForm, LikeForm
+from flask_blog_portfolio.users.utils import save_picture
 
 posts = Blueprint('posts', __name__)
 
@@ -19,18 +20,24 @@ def allpost():
 @login_required
 def new_post():
     form = PostForm()
+    picture_name = None
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        if form.picture.data:
+            picture_name = save_picture(form.picture.data)
+        post = Post(title=form.title.data, content=form.content.data, author=current_user, image_file=picture_name)
         db.session.add(post)
         db.session.commit()
         flash('Ваш пост создан!', 'success')
         return redirect(url_for('posts.allpost'))
-    return render_template('create_post.html', title='Новый пост', form=form, legend='Новый пост')
+    return render_template('create_post.html', title='Новый пост', form=form, image_file=picture_name, legend='Новый пост')
 
 
 @posts.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     post = Post.query.get_or_404(post_id)
+    like_form = LikeForm()
+    like_count = Like.query.filter_by(post_id=post_id).count()
+
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comment(body=form.comment.data, post_id=post_id, username=current_user.username)
@@ -39,7 +46,7 @@ def post(post_id):
         flash('Ваш комментарий добавлен!', 'success')
         return redirect(f'/post/{post_id}')
 
-    return render_template('post.html', title=post.title, post=post, form=form)
+    return render_template('post.html', title=post.title, post=post, form=form, like_form=like_form, like_count=like_count)
 
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -52,13 +59,23 @@ def update_post(post_id):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            post.image_file = picture_file
+
         db.session.commit()
         flash('Ваш пост обновлен!', 'success')
+
         return redirect(url_for('posts.post', post_id=post.id))
+
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
-    return render_template('create_post.html', title='Обновление поста',
+
+        image_file = url_for('static', filename='posts_pics/' + post.image_file)
+
+    return render_template('create_post.html', title='Обновление поста', image_file=image_file,
                            form=form, legend='Обновление поста')
 
 
@@ -85,3 +102,23 @@ def delete_comment(comment_id):
     flash('Ваш комментарий был удален!', 'success')
 
     return redirect(url_for('posts.post', post_id=comment.post_id))
+
+
+@posts.route('/post/<string:post_id>/like', methods=('POST',))
+@login_required
+def like_post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    if post.author == current_user:
+        flash('Вы не можете поставить лайк т.к. пост создали Вы сами', 'warning')
+    elif Like.query.filter_by(user_id=current_user.id, post_id=post_id).count():
+        Like.query.filter_by(user_id=current_user.id, post_id=post_id).delete()
+        db.session.commit()
+        flash('Вам больше не нравится этот пост.', 'success')
+    else:
+        like = Like(user_id=current_user.id, post_id=post_id)
+        db.session.add(like)
+        db.session.commit()
+        flash('Вам нравится этот пост.', 'success')
+
+    return redirect(url_for('posts.post', post_id=post_id))
