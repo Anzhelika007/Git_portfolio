@@ -2,60 +2,103 @@
 
 {% block body %}
 <section>
-<div class="container" style="display: flex;">
-    <article class="media" style="display: flex; flex-direction: column;">
-        <img class="rounded-circle article-img account_img"
-             src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
-        <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}" style="margin: 0 auto">{{
-            post.author.username }}</a>
-    </article>
+    <div class="container" style="display: flex;">
+        <article class="media" style="display: flex; flex-direction: column;">
+            <img class="rounded-circle article-img account_img"
+                 src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+            <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}"
+               style="margin: 0 auto">{{
+                post.author.username }}</a>
+        </article>
 
-    <div class="card" style="margin-bottom: 20px;">
-        <div class="card-body">
-            <h4 class="card-title">{{ post.title }}</h4>
-            <small>Опубликовано {{ post.date_posted.strftime('%A, %d %B %Y %I:%M %p') }}</small>
-            <br>
-            <br>
-            <p class="card-text">{{ post.content }}</p>
-        </div>
-        <div class="card-footer" style="font-size: 20px;">
-            <!-- <i class="fa fa-heart-o"></i>
-            <i class="fa fa-bookmark-o"></i> -->
-            {% if post.author == current_user %}
-            <div class="card-footer" style="font-size: 20px;"> {% if post.author == current_user %}<a
-                    class="btn btn-secondary btn-sm mt-1 mb-1"
-                    href="{{url_for('posts.update_post', post_id=post.id) }}">Обновить</a>
-                <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Удалить
-                </button>
+        <div class="card" style="margin-bottom: 20px;">
+            <div class="card-body">
+                <h4 class="card-title">{{ post.title }}</h4>
+                <small>Опубликовано {{ post.date_posted.strftime('%A, %d %B %Y %I:%M %p') }}</small>
+                <br>
+                <br>
+                <p class="card-text">{{ post.content }}</p>
+            </div>
+            <div class="card-footer" style="font-size: 20px;">
+                <!-- <i class="fa fa-heart-o"></i>
+                <i class="fa fa-bookmark-o"></i> -->
+                {% if post.author == current_user %}
+                <div class="card-footer" style="font-size: 20px;"> {% if post.author == current_user %}<a
+                        class="btn btn-secondary btn-sm mt-1 mb-1"
+                        href="{{url_for('posts.update_post', post_id=post.id) }}">Обновить</a>
+                    <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal">Удалить
+                    </button>
+                    {% endif %}
+                </div>
                 {% endif %}
+                <div class="card-footer" style="font-size: 20px;"><a
+                        class="btn btn-secondary btn-sm mt-1 mb-1"
+                        href="{{url_for('posts.allpost') }}">Назад к постам</a>
+                </div>
             </div>
-            {% endif %}
-            <div class="card-footer" style="font-size: 20px;"><a
-                    class="btn btn-secondary btn-sm mt-1 mb-1"
-                    href="{{url_for('posts.allpost') }}">Назад к постам</a>
         </div>
-    </div>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Удалить пост?</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
-                    <input class="btn btn-danger" type="submit" value="Удалить">
-                </form>
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Удалить пост?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+                            <input class="btn btn-danger" type="submit" value="Удалить">
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
+
+
+        {% if post.comments | length != 0 %}
+
+        <h2>Комментарии: </h2>
+        <p>{% for comment in post.comments | reverse %}
+        <p style="font-size: 14px;">{{ comment.body }}</p>
+        <p><small>Автор: {{ comment.username }}</small>
+            <small>Дата: {{ comment.timestamp.strftime('%A, %d %B %Y %I:%M %p') }}</small></p>
+
+        {% if comment.username == current_user.username %}
+        <form action="{{ url_for('posts.delete_comment', comment_id=comment.id) }}" method="POST">
+            <input class="submit" type="submit" value="Удалить">
+        </form>
+        {% endif %}
+        <hr>
+        {% endfor %}
+
+        {% endif %}
+
+
+        <div id="content">
+            <!-- insert the page content here -->
+            <h2>Оставьте комментарий</h2>
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <div class="form_settings">
+
+                    <p><span>Текст</span><textarea class="contact" name="comment" rows="5"></textarea>
+                        {% if form.comment.errors %}
+                        {% for error in form.comment.errors %}
+                    <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                    {% endif %}
+
+                    <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="submit"
+                                                                           value="Сохранить"/></p>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 </section>
 {% endblock %}

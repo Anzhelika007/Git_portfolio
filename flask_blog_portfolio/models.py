@@ -42,5 +42,15 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    comments = db.relationship('Comment', backref='title', lazy='select', cascade='all, delete-orphan')
+
     def __repr__(self):
         return f"Запись('{self.title}', '{self.date_posted}')"
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    username = db.Column(db.String, db.ForeignKey('user.username'), nullable=False)
