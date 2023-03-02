@@ -54,3 +54,11 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     username = db.Column(db.String, db.ForeignKey('user.username'), nullable=False)
+
+
+class Hashtage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+
+    def __repr__(self):
+        return f"Hashtag('{self.name}')"
