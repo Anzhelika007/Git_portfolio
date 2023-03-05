@@ -1,15 +1,19 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, FileField
 from wtforms.validators import DataRequired
+from wtforms import SelectField
 from flask_wtf.file import FileAllowed
 
 
 class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
+    title = StringField('Заголовок', validators=[DataRequired()])
+    content = TextAreaField('Текст', validators=[DataRequired()])
     picture = FileField('Приложите фото к посту', validators=[FileAllowed(['jpg', 'png'])])
+    submit = SubmitField('Просмотр')
 
-    submit = SubmitField('Post')
+
+class HashtagForm(FlaskForm):
+    hashtag = StringField('Хештэг', validators=[DataRequired()])
 
 
 class CommentForm(FlaskForm):
@@ -18,3 +22,4 @@ class CommentForm(FlaskForm):
 
 class LikeForm(FlaskForm):
     submit = SubmitField('Создать')
+

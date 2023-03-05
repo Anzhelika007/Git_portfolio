@@ -37,13 +37,41 @@ class User(db.Model, UserMixin):
         return User.query.get(data['user_id'])
 
 
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<Category %r>' % self.name
+
+
+hashtag_posts = db.Table('hashtag_article',
+                           db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.id')),
+                           db.Column('post_id', db.Integer, db.ForeignKey('post.id'))
+                           )
+
+
+class Hashtag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<Hashtag %r>' % self.name
+
+    def __str__(self):
+        return self.name
+
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    update_post = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.png')
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    hashtags = db.relationship('Hashtag', secondary=hashtag_posts, backref=db.backref('posts', lazy='dynamic'))
 
     comments = db.relationship('Comment', backref='title', lazy='select', cascade='all, delete-orphan')
 
@@ -66,9 +94,4 @@ class Like(db.Model):
     post_id = db.Column(db.String(36), db.ForeignKey('post.id'), nullable=False)
 
 
-class Hashtage(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
 
-    def __repr__(self):
-        return f"Hashtag('{self.name}')"

@@ -1,8 +1,8 @@
 from flask import (render_template, url_for, flash, redirect, request, abort, Blueprint)
 from flask_login import current_user, login_required
 from flask_blog_portfolio import db
-from flask_blog_portfolio.models import Post, Comment, Like
-from flask_blog_portfolio.posts.forms import PostForm, CommentForm, LikeForm
+from flask_blog_portfolio.models import Post, Comment, Like, Category, Hashtag, hashtag_posts
+from flask_blog_portfolio.posts.forms import PostForm, CommentForm, LikeForm, HashtagForm
 from flask_blog_portfolio.users.utils import save_picture
 
 posts = Blueprint('posts', __name__)
@@ -19,17 +19,36 @@ def allpost():
 @posts.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
+    categories = Category.query.all()
+    hashtags = Hashtag.query.all()
     form = PostForm()
     picture_name = None
+
     if form.validate_on_submit():
         if form.picture.data:
             picture_name = save_picture(form.picture.data)
-        post = Post(title=form.title.data, content=form.content.data, author=current_user, image_file=picture_name)
+
+        post = Post(title=form.title.data, content=form.content.data, author=current_user, image_file=picture_name,
+                    category_id=request.form['category'])
+
+        hashtags_id = request.form.getlist('hashtags[]')
+        for i in range(3):
+            if request.form[f'hashtag{i+1}']:
+                hastag = Hashtag(name=request.form[f'hashtag{i+1}'])
+                db.session.add(hastag)
+                db.session.commit()
+                hashtags_id.append(hastag.id)
+
+        for i in hashtags_id:
+            hash = Hashtag.query.filter_by(id=int(i)).all()
+            post.hashtags.extend(hash)
+
         db.session.add(post)
         db.session.commit()
+
         flash('Ваш пост создан!', 'success')
-        return redirect(url_for('posts.allpost'))
-    return render_template('create_post.html', title='Новый пост', form=form, image_file=picture_name, legend='Новый пост')
+        return redirect(url_for('posts.post', post_id=post.id))
+    return render_template('create_post.html',  title='Новая статья', form=form,  image_file=picture_name, legend='Новая статья', categories=categories, hashtags=hashtags)
 
 
 @posts.route("/post/<int:post_id>", methods=['GET', 'POST'])
