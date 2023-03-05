@@ -12,10 +12,6 @@ class PostForm(FlaskForm):
     submit = SubmitField('Просмотр')
 
 
-class HashtagForm(FlaskForm):
-    hashtag = StringField('Хештэг', validators=[DataRequired()])
-
-
 class CommentForm(FlaskForm):
     comment = StringField('Комментарий', validators=[DataRequired()])
 

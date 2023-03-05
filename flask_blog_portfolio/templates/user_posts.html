@@ -1,44 +1,54 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<section class="registration">
-    <div class="container-md">
-        <h1 class="mb-3">Посты опубликованы пользователем {{ user.username }} ({{ posts.total }})</h1>
-        {% for post in posts.items %}
-        <div class="container" style="display: flex;">
-            <article class="media" style="display: flex; flex-direction: column;">
-                <img class="rounded-circle article-img" style="margin-right: 5px;"
-                     src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
-                <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}"
-                   style="margin: 0 auto">{{ post.author.username }}</a>
-            </article>
-
-            <div class="card" style="margin-bottom: 20px;">
-                <div class="card-body">
-                    <h4 class="card-title"></h4>
-
-                    <small>Опубликовано {{ post.date_posted.strftime('%A, %d %B %Y %I:%M %p') }}</small>
-                    <br>
-                    <br>
-                    <p class="card-text">{{ post.content }}</p>
+<section>
+    <div class="container">
+        <h1 class="title_post_user">Посты опубликованы пользователем {{ user.username }} ({{ posts.total }})</h1>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for post in posts.items %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <a class="title" href="{{ url_for('posts.post', post_id=post.id) }}">
+                        <img class="all_post_img"
+                             src="{{ url_for('static', filename='profile_pics/' + post.image_file) }}">
+                    </a>
+                    <div class="card-body">
+                        <div class="d-flex flex-row mb-3">
+                            <div class="flex-grow-1">
+                            <span class="account_img">
+                                <img class="post_author"
+                                     src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+                            </span>
+                                <span> <a href="{{ url_for('users.user_posts', username=post.author.username) }}"
+                                          id="author" style="margin: 0 auto;">{{ post.author.username }}</a></span>
+                            </div>
+                            <span class="card-text"><small class="text-muted">{{ post.date_posted.strftime('%A, %d %B %Y') }}</small></span>
+                        </div>
+                        <h5 class="card-title"><a class="title" href="{{ url_for('posts.post', post_id=post.id) }}">{{
+                            post.title }}</a></h5>
+                        <p class="card-text">{{ post.content| truncate(110, False, '...', 0)}}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="{{ url_for('posts.post', post_id=post.id) }}"
+                                   class="btn btn-success">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- <div class="card-footer" style="font-size: 20px;">
-                  <i class="fa fa-heart-o"></i>
-                  <i class="fa fa-bookmark-o"></i>
-                </div> -->
             </div>
+
+            {% endfor %}
+
         </div>
-        {% endfor %}
 
-
+    <div class="text-center all_post_paginate">
         {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
         {% if posts.page == page_num %}
-        <a class="btn btn-success mb-4" href="{{ url_for('users.user_posts', username=user.username, page=page_num) }}">{{
+        <a class="btn btn-warning mb-4" href="{{ url_for('users.user_posts', username=user.username, page=page_num) }}">{{
             page_num }}</a>
         {% else %}
-        <a class="btn btn-outline-success mb-4"
-           href="{{ url_for('users.user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        <a class="btn btn-outline-warning mb-4" href="{{ url_for('users.user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
         {% endif %}
         {% else %}
         ...

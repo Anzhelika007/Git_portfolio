@@ -1,3 +1,13 @@
+html {
+    font-family: 'Montserrat', sans-serif;;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+.a:hover {
+    color:#BB8C5F;
+}
 .title_{
     padding: 30px 0 30px 0;
 }
@@ -107,4 +117,93 @@ section, .padding_menu {
     align-items: center;
 }
 /* Пост */
-/* Пост */
+.post_tag {
+    font-size: 14px;
+    padding: 0px 5px 3px;
+    border-radius: 15px;
+    letter-spacing: 2px;
+}
+.post_title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 39px;
+}
+.post_author {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+.post_author_name {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    color: #24211F;
+}
+.post_img {
+    width: 913px;
+    height: 504px;
+}
+.post_content {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 145%;
+}
+.post_title_comment {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 145%;
+}
+.post_comment {
+    background: #E5E5E5;
+    border-radius: 20px;
+    padding: 15px 20px 0px;
+}
+.post_comment_textarea {
+    width: 100%;
+}
+.post_comment_footer {
+    padding: 0px 20px 0px 40px;
+}
+
+/* Все пост */
+.all_post_img {
+    max-width: 420px;
+    max-height: 250px;
+    width: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.all_post_paginate {
+    padding-top: 50px;
+}
+
+/* Посты юзера */
+.title_post_user {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 39px;
+    text-align: center;
+    color: #24211F;
+    padding: 30px 0 30px;
+}
+
+/* Главная */
+.head_post_img {
+    width: 100%;
+    height: 350px;
+    border-radius: 5px;
+}
+.head_post_title {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 39px;
+    text-align: center;
+    color: #24211F;
+}

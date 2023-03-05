@@ -69,32 +69,29 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <a class="title" href="{{ url_for('posts.post', post_id=post.id) }}">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
-                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                             preserveAspectRatio="xMidYMid slice" focusable="false">
-                            <title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#55595c"></rect>
-                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-                        </svg>
+                        <img class="all_post_img"
+                             src="{{ url_for('static', filename='profile_pics/' + post.image_file) }}">
                     </a>
                     <div class="card-body">
-                        <div>
-                        <span class="account_img">
-                            <img class="account_img"
-                                 src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
-                        </span>
-                            <span> <a href="{{ url_for('users.user_posts', username=post.author.username) }}" id="author"
-                                      style="margin: 0 auto;">{{ post.author.username }}</a></span>
-                            <span class="card-text"><small class="text-muted">{{ post.date_posted.strftime('%A, %d %B %Y %I:%M %p') }}</small></span>
+                        <div class="d-flex flex-row mb-3">
+                            <div class="flex-grow-1">
+                            <span class="account_img">
+                                <img class="post_author"
+                                     src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+                            </span>
+                                <span> <a href="{{ url_for('users.user_posts', username=post.author.username) }}"
+                                          id="author" style="margin: 0 auto;">{{ post.author.username }}</a></span>
+                            </div>
+                            <span class="card-text"><small class="text-muted">{{ post.date_posted.strftime('%A, %d %B %Y') }}</small></span>
                         </div>
                         <h5 class="card-title"><a class="title" href="{{ url_for('posts.post', post_id=post.id) }}">{{
                             post.title }}</a></h5>
                         <p class="card-text">{{ post.content| truncate(110, False, '...', 0)}}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a href="{{ url_for('posts.post', post_id=post.id) }}" class="btn btn-success">Подробнее</a>
+                                <a href="{{ url_for('posts.post', post_id=post.id) }}"
+                                   class="btn btn-success">Подробнее</a>
                             </div>
-                            <small class="text-muted">9 mins</small>
                         </div>
                     </div>
                 </div>
@@ -103,13 +100,13 @@
             {% endfor %}
 
         </div>
-        <div class="text-center">
+        <div class="text-center all_post_paginate">
             {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
             {% if posts.page == page_num %}
-            <a class="btn btn-success mb-4" href="{{ url_for('posts.allpost', page=page_num) }}">{{ page_num }}</a>
+            <a class="btn btn-warning mb-4" href="{{ url_for('posts.allpost', page=page_num) }}">{{ page_num }}</a>
             {% else %}
-            <a class="btn btn-outline-success mb-4" href="{{ url_for('posts.allpost', page=page_num) }}">{{ page_num
+            <a class="btn btn-outline-warning mb-4" href="{{ url_for('posts.allpost', page=page_num) }}">{{ page_num
                 }}</a>
             {% endif %}
             {% else %}

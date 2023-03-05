@@ -1,8 +1,8 @@
-from flask import (render_template, url_for, flash, redirect, request, abort, Blueprint)
+from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flask_login import current_user, login_required
 from flask_blog_portfolio import db
-from flask_blog_portfolio.models import Post, Comment, Like, Category, Hashtag, hashtag_posts
-from flask_blog_portfolio.posts.forms import PostForm, CommentForm, LikeForm, HashtagForm
+from flask_blog_portfolio.models import Post, Comment, Like, Category, Hashtag
+from flask_blog_portfolio.posts.forms import PostForm, CommentForm, LikeForm
 from flask_blog_portfolio.users.utils import save_picture
 
 posts = Blueprint('posts', __name__)
@@ -32,9 +32,11 @@ def new_post():
                     category_id=request.form['category'])
 
         hashtags_id = request.form.getlist('hashtags[]')
-        for i in range(3):
-            if request.form[f'hashtag{i+1}']:
-                hastag = Hashtag(name=request.form[f'hashtag{i+1}'])
+        hashtags_new = request.form.getlist('hashtags_new[]')
+
+        for i in range(len(hashtags_new)):
+            if len(hashtags_new[i]) > 0:
+                hastag = Hashtag(name=hashtags_new[i])
                 db.session.add(hastag)
                 db.session.commit()
                 hashtags_id.append(hastag.id)
