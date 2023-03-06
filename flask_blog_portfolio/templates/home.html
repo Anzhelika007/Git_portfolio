@@ -80,12 +80,12 @@
                 </div>
             </div>
 
-            {% for category in categories %}
+            {% for category in categories_head %}
             <h2 class="pb-2 border-bottom">{{ category.name }}</h2>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                {% for post in posts %}
-                {% if post.category_id == category.id %}
+                {% for post in posts_head %}
                 {% if post.id != posts_first.id %}
+                {% if post.category_id == category.id %}
 
                 <div class="col">
                     <div class="card shadow-sm">
