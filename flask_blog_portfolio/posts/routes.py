@@ -158,4 +158,11 @@ def favorites():
     print(like)
     count = Like.query.filter_by(user_id=current_user.id).count()
     print(count)
-    return render_template('favorites.html', title='Избранное', posts=posts, like=like, count=count)
+    favorite_posts = []
+    for post in posts:
+        if post.id in like:
+            favorite_posts.append(post)
+    print(posts)
+    print(favorite_posts)
+
+    return render_template('favorites.html', title='Избранное', posts=favorite_posts, like=like, count=count)
