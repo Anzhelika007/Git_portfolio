@@ -8,12 +8,15 @@ from flask_blog_portfolio.users.utils import save_picture
 posts = Blueprint('posts', __name__)
 
 
-@posts.route("/allpost")
+@posts.route("/allpost", methods=['GET', 'POST'])
 @login_required
-def allpost():
+def allpost(post_id=None):
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=6)
-    return render_template('allpost.html', posts=posts)
+    like_form = LikeForm()
+    like_count = Like.query.filter_by(post_id=post_id).count()
+
+    return render_template('allpost.html', posts=posts, like_form=like_form, like_count=like_count)
 
 
 @posts.route("/post/new", methods=['GET', 'POST'])
@@ -50,7 +53,8 @@ def new_post():
 
         flash('Ваш пост создан!', 'success')
         return redirect(url_for('posts.post', post_id=post.id))
-    return render_template('create_post.html',  title='Новая статья', form=form,  image_file=picture_name, legend='Новая статья', categories=categories, hashtags=hashtags)
+    return render_template('create_post.html', title='Новая статья', form=form, image_file=picture_name,
+                           legend='Новая статья', categories=categories, hashtags=hashtags)
 
 
 @posts.route("/post/<int:post_id>", methods=['GET', 'POST'])
@@ -67,7 +71,8 @@ def post(post_id):
         flash('Ваш комментарий добавлен!', 'success')
         return redirect(f'/post/{post_id}')
 
-    return render_template('post.html', title=post.title, post=post, form=form, like_form=like_form, like_count=like_count)
+    return render_template('post.html', title=post.title, post=post, form=form, like_form=like_form,
+                           like_count=like_count)
 
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -143,3 +148,14 @@ def like_post(post_id):
         flash('Вам нравится этот пост.', 'success')
 
     return redirect(url_for('posts.post', post_id=post_id))
+
+
+@posts.route("/favorites", methods=['GET', 'POST'])
+@login_required
+def favorites():
+    posts = Post.query.all()
+    like = Like.query.filter_by(user_id=current_user.id).all()
+    print(like)
+    count = Like.query.filter_by(user_id=current_user.id).count()
+    print(count)
+    return render_template('favorites.html', title='Избранное', posts=posts, like=like, count=count)

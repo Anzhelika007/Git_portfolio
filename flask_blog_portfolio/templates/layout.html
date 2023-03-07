@@ -75,7 +75,7 @@
                                 <li><a class="dropdown-item" href="{{ url_for('users.account') }}">Profile</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('posts.new_post') }}">Add post</a></li>
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ url_for('posts.favorites') }}">
                                         Favorites posts
                                         <svg class="bi me-2 position-relative" width="25" height="30">
                                             <use xlink:href="../static/icon/sprite.svg#zakladka"></use>

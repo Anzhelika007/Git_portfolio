@@ -1,9 +1,10 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_blog_portfolio import db, bcrypt
-from flask_blog_portfolio.models import User, Post
+from flask_blog_portfolio.models import User, Post, Like
 from flask_blog_portfolio.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm,
                                               ResetPasswordForm)
+from flask_blog_portfolio.posts.forms import LikeForm
 from flask_blog_portfolio.users.utils import send_reset_email
 
 from flask_blog_portfolio.users.utils import save_picture
@@ -108,3 +109,4 @@ def reset_token(token):
         flash('Ваш пароль был обновлен! Теперь вы можете авторизоваться', 'success')
         return redirect(url_for('users.login'))
     return render_template('reset_token.html', title='Сброс пароля', form=form)
+

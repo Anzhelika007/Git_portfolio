@@ -67,11 +67,20 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for post in posts.items %}
             <div class="col">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm allpost_card_hash">
                     <a class="title" href="{{ url_for('posts.post', post_id=post.id) }}">
                         <img class="all_post_img"
                              src="{{ url_for('static', filename='profile_pics/' + post.image_file) }}">
                     </a>
+                    <div class="allpost_card_hastags">
+                        <div class="p-2">
+                            {% for tag in post.hashtags %}
+                            <span class="btn btn-warning text-light post_tag">{{ tag.name}}</span>
+                            {% endfor %}
+                        </div>
+
+
+                    </div>
                     <div class="card-body">
                         <div class="d-flex flex-row mb-3">
                             <div class="flex-grow-1">
@@ -91,6 +100,18 @@
                             <div class="btn-group">
                                 <a href="{{ url_for('posts.post', post_id=post.id) }}"
                                    class="btn btn-success">Подробнее</a>
+                            </div>
+                            <div class="p-2">
+                                <form action="{{ url_for('posts.like_post', post_id=post.id) }}" method="post">
+                                    {{ like_form.hidden_tag() }}
+                                    <button type="submit"
+                                            style="border: none; background-color: #FFFFFF;">
+                                        <img style="width: 32px;"
+                                             src="{{ url_for('static', filename='image/like.svg') }}" alt="...">
+                                        {{ like_count if like_count > 0 }}
+                                    </button>
+                                </form>
+
                             </div>
                         </div>
                     </div>

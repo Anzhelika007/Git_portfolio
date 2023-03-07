@@ -116,6 +116,12 @@ section, .padding_menu {
     margin-bottom: 40px;
     align-items: center;
 }
+.allpost_card_hash {
+    position: relative;
+}
+.allpost_card_hastags {
+    position: absolute;
+}
 /* Пост */
 .post_tag {
     font-size: 14px;
